@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  int days = 10;
-  String name = "sandip";
+  final int days = 10;
+  final String name = "sandip";
 
   @override
   Widget build(BuildContext context) {
