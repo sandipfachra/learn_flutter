@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:food_delivery/core/store.dart';
+import 'package:food_delivery/models/cart.dart';
 import 'dart:convert';
 import 'package:food_delivery/models/catalog.dart';
 import 'package:food_delivery/utils/routes.dart';
@@ -15,8 +17,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String name = "sandip";
+  // final String name = "sandip";
   CatalogModel catalogModel = CatalogModel();
+
+  var http;
 
   @override
   void initState() {
@@ -26,8 +30,10 @@ class _HomePageState extends State<HomePage> {
 
   loadData() async {
     await Future.delayed(Duration(seconds: 3));
+
     final catalogJson =
         await rootBundle.loadString("assets/files/catalog.json");
+
     final decodedData = jsonDecode(catalogJson);
     var productData = decodedData["products"];
     var listTemp =
@@ -39,16 +45,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
       backgroundColor: MyTheme.creamColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, MyRoutes.cartRoute),
-        backgroundColor: MyTheme.orangeColor,
-        child: Icon(
-          CupertinoIcons.cart,
-          color: Colors.white,
-        ),
-      ),
+      floatingActionButton: VxBuilder(
+          mutations: {AddMutation, RemoveMutation},
+          // ignore: non_constant_identifier_names
+          builder: (context, _, VxStatus) => FloatingActionButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, MyRoutes.cartRoute),
+                backgroundColor: MyTheme.orangeColor,
+                child: Icon(
+                  CupertinoIcons.cart,
+                  color: Colors.white,
+                ),
+              ).badge(
+                  color: Colors.deepOrangeAccent,
+                  size: 21,
+                  count: _cart.items.length,
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13))),
       body: SafeArea(
         child: Container(
             padding: Vx.m32,

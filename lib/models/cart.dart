@@ -1,3 +1,6 @@
+import 'package:velocity_x/velocity_x.dart';
+
+import 'package:food_delivery/core/store.dart';
 import 'package:food_delivery/models/catalog.dart';
 
 class CartModel {
@@ -8,11 +11,11 @@ class CartModel {
   final List<int> _itemIds = [];
 
   // Get catalog
+  // ignore: unnecessary_getters_setters
   CatalogModel get catalog => _catalog;
 
+  // ignore: unnecessary_getters_setters
   set catalog(CatalogModel newCatalog) {
-    // ignore: unnecessary_null_comparison
-    assert(catalog != null);
     _catalog = newCatalog;
   }
 
@@ -23,13 +26,26 @@ class CartModel {
   num get totalprice =>
       items.fold(0, (total, current) => total + current.price);
 
-  // Add item
-  void add(Item item) {
-    _itemIds.add(item.id);
-  }
+  void remove(Item item) {}
+}
 
-  // Remove item
-  void remove(Item item) {
-    _itemIds.remove(item.id);
+class AddMutation extends VxMutation<MyStore> {
+  final Item item;
+
+  AddMutation(this.item);
+  @override
+  perform() {
+    store!.cart._itemIds.add(item.id);
+  }
+}
+
+class RemoveMutation extends VxMutation<MyStore> {
+  final Item item;
+
+  RemoveMutation(this.item);
+
+  @override
+  perform() {
+    store!.cart._itemIds.remove(item.id);
   }
 }

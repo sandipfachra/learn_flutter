@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/core/store.dart';
 import 'package:food_delivery/pages/cart_page.dart';
 import 'package:food_delivery/pages/home_page.dart';
 import 'package:food_delivery/pages/login_page.dart';
 import 'package:food_delivery/utils/routes.dart';
 import 'package:food_delivery/widgets/themes.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(VxState(store: MyStore(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
